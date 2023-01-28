@@ -1,5 +1,5 @@
 import "./App.css";
-import Board from "./Board";
+import { Board } from "./Board";
 
 function App() {
   return (
@@ -8,7 +8,7 @@ function App() {
         <span className="Title_1half">LIGHTS</span>
         <span className="Title_2half">OUT</span>
       </h1>
-      <Board size={5} chance={0.5} />
+      <Board size={5} chance={0.25} />
     </div>
   );
 }

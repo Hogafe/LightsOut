@@ -1,20 +1,33 @@
 import "./Board.css";
 import Cell from "./Cell";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-function Board({ size, chance }: { size: number; chance: number }) {
-  function random() {
-    return Math.random() < chance;
-  }
+export function Board({ size, chance }: { size: number; chance: number }) {
+  const [hasWon, setHasWon] = useState(false);
+
+  const random = () => Math.random() < chance;
+
   const [grid, setGrid] = useState(
     Array.from({ length: size }, () =>
       Array.from({ length: size }, () => random())
     )
   );
 
-  const toggleLight = (updatedRow: number, updatedColumn: number) => {
+  const resetGrid = () => {
     setGrid(
-      grid.map((row, rowIndex) =>
+      Array.from({ length: size }, () =>
+        Array.from({ length: size }, () => random())
+      )
+    );
+  };
+
+  useEffect(() => {
+    setHasWon(grid.slice(4, 5).every((row) => row.every((cell) => !cell)));
+  }, [grid]);
+
+  const toggleOne = (updatedRow: number, updatedColumn: number) => {
+    setGrid((latestGrid) =>
+      latestGrid.map((row, rowIndex) =>
         updatedRow === rowIndex
           ? row.map((cell, columnIndex) =>
               updatedColumn === columnIndex ? !cell : cell
@@ -24,29 +37,37 @@ function Board({ size, chance }: { size: number; chance: number }) {
     );
   };
 
-  const toggleNeighbours = (updatedRow: number, updatedColumn: number) => {
-    toggleLight(updatedRow, updatedColumn); // self
-    toggleLight(updatedRow - 1, updatedColumn); // up
-    toggleLight(updatedRow + 1, updatedColumn); // down
-    toggleLight(updatedRow, updatedColumn + 1); // right
-    toggleLight(updatedRow, updatedColumn - 1); // left
+  const toggleLights = (updatedRow: number, updatedColumn: number) => {
+    toggleOne(updatedRow, updatedColumn); // self
+    toggleOne(updatedRow - 1, updatedColumn); // up
+    toggleOne(updatedRow + 1, updatedColumn); // down
+    toggleOne(updatedRow, updatedColumn + 1); // right
+    toggleOne(updatedRow, updatedColumn - 1); // left
   };
 
   return (
-    <div className="board">
-      {grid.map((row, rowIndex) => (
-        <div className="row" key={rowIndex}>
-          {row.map((cell, columnIndex) => (
-            <Cell
-              cellOn={cell}
-              toggleLight={() => toggleNeighbours(rowIndex, columnIndex)}
-              key={columnIndex}
-            ></Cell>
-          ))}
+    <div className="container">
+      <div className="board">
+        {grid.map((row, rowIndex) => (
+          <div className="row" key={rowIndex}>
+            {row.map((cell, columnIndex) => (
+              <Cell
+                cellOn={cell}
+                toggleLight={() => toggleLights(rowIndex, columnIndex)}
+                key={columnIndex}
+              ></Cell>
+            ))}
+          </div>
+        ))}
+      </div>
+      {hasWon ? (
+        <div className="congratulationsContainer">
+          <p className="congratulationsText"> CONGARTULATIONS!!!</p>
+          <button onClick={resetGrid} className="restartButton">
+            RESTART
+          </button>
         </div>
-      ))}
+      ) : undefined}
     </div>
   );
 }
-
-export default Board;

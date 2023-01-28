@@ -1,12 +1,43 @@
 .board {
-  background-color: blueviolet;
+  background-color: rgb(59, 59, 59);
   border-radius: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
   padding: 2rem;
+  overflow: hidden;
 }
 .row {
   display: flex;
   gap: 2rem;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.congratulationsContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.congratulationsText {
+  margin: 1rem;
+  color: rgb(18, 231, 231);
+}
+
+.restartButton {
+  border-radius: 0.5rem;
+  font-size: 3rem;
+  background-color: rgb(73, 72, 72);
+  color: rgb(255, 255, 255);
+}
+
+.restartButton:hover {
+  background-color: rgb(45, 95, 95);
 }
