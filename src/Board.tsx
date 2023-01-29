@@ -22,7 +22,7 @@ export function Board({ size, chance }: { size: number; chance: number }) {
   };
 
   useEffect(() => {
-    setHasWon(grid.slice(4, 5).every((row) => row.every((cell) => !cell)));
+    setHasWon(grid.every((row) => row.every((cell) => !cell)));
   }, [grid]);
 
   const toggleOne = (updatedRow: number, updatedColumn: number) => {
@@ -61,7 +61,7 @@ export function Board({ size, chance }: { size: number; chance: number }) {
         ))}
       </div>
       {hasWon ? (
-        <div className="congratulationsContainer">
+        <div className="winContainer">
           <p className="congratulationsText"> CONGARTULATIONS!!!</p>
           <button onClick={resetGrid} className="restartButton">
             RESTART

@@ -19,7 +19,7 @@
   justify-content: center;
 }
 
-.congratulationsContainer {
+.winContainer {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -28,16 +28,17 @@
 
 .congratulationsText {
   margin: 1rem;
-  color: rgb(18, 231, 231);
+  color: rgb(255, 187, 0);
 }
 
 .restartButton {
   border-radius: 0.5rem;
   font-size: 3rem;
-  background-color: rgb(73, 72, 72);
-  color: rgb(255, 255, 255);
+  border: none;
+  background-color: rgb(50, 50, 50);
+  color: rgb(255, 187, 0);
 }
 
 .restartButton:hover {
-  background-color: rgb(45, 95, 95);
+  background-color: rgb(40, 40, 40);
 }

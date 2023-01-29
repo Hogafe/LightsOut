@@ -6,7 +6,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(59, 48, 48);
+  background-color: rgb(40, 40, 40);
+  font-family: "Bungee";
 }
 
 code {
