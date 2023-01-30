@@ -5,17 +5,17 @@
   border: none;
   transition: background-color 0.1s ease-out;
 }
-.cellLightOn:hover {
+.cellOn:hover {
   background-color: rgba(255, 187, 0, 0.8);
 }
-.cellLightOff:hover {
+.cellOff:hover {
   background-color: rgba(255, 187, 0, 0.1);
 }
-.cellLightOn {
+.cellOn {
   background-color: rgb(255, 187, 0);
-  box-shadow: 0 0 42px rgb(255, 187, 0), 0 0 82px rgb(255, 187, 0),
-    0 0 92px rgb(255, 187, 0);
+  box-shadow: 0 0 2.5rem rgb(255, 187, 0), 0 0 5rem rgb(255, 187, 0),
+    0 0 5.75rem rgb(255, 187, 0);
 }
-.cellLightOff {
+.cellOff {
   background-color: rgb(80, 80, 80);
 }

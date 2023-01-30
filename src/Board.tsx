@@ -1,30 +1,28 @@
 import "./Board.css";
 import Cell from "./Cell";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export function Board({ size, chance }: { size: number; chance: number }) {
   const [hasWon, setHasWon] = useState(false);
 
-  const random = () => Math.random() < chance;
-
-  const [grid, setGrid] = useState(
-    Array.from({ length: size }, () =>
-      Array.from({ length: size }, () => random())
-    )
-  );
-
-  const resetGrid = () => {
-    setGrid(
-      Array.from({ length: size }, () =>
-        Array.from({ length: size }, () => random())
-      )
+  // helper to generate a randomly populated grid
+  const makeGrid = () => {
+    return Array.from({ length: size }, () =>
+      Array.from({ length: size }, () => {
+        // generate a randomly enabled/disabled cell
+        return Math.random() < chance;
+      })
     );
   };
 
+  const [grid, setGrid] = useState(makeGrid());
+
   useEffect(() => {
+    // check if every cell in every row is disabled
     setHasWon(grid.every((row) => row.every((cell) => !cell)));
   }, [grid]);
 
+  // toggle a single specified cell
   const toggleOne = (updatedRow: number, updatedColumn: number) => {
     setGrid((latestGrid) =>
       latestGrid.map((row, rowIndex) =>
@@ -37,6 +35,7 @@ export function Board({ size, chance }: { size: number; chance: number }) {
     );
   };
 
+  // toggle a specified cell along with its neighbors
   const toggleLights = (updatedRow: number, updatedColumn: number) => {
     toggleOne(updatedRow, updatedColumn); // self
     toggleOne(updatedRow - 1, updatedColumn); // up
@@ -47,6 +46,12 @@ export function Board({ size, chance }: { size: number; chance: number }) {
 
   return (
     <div className="container">
+      <h1 className="title">
+        <span className="title1">LIGHTS</span>
+        &nbsp;
+        <span className="title2">OUT</span>
+      </h1>
+
       <div className="board">
         {grid.map((row, rowIndex) => (
           <div className="row" key={rowIndex}>
@@ -60,10 +65,12 @@ export function Board({ size, chance }: { size: number; chance: number }) {
           </div>
         ))}
       </div>
+
+      {/* if the player has won, show the reset button and congratulations text*/}
       {hasWon ? (
         <div className="winContainer">
-          <p className="congratulationsText"> CONGARTULATIONS!!!</p>
-          <button onClick={resetGrid} className="restartButton">
+          <p className="winText"> CONGARTULATIONS!!!</p>
+          <button onClick={() => setGrid(makeGrid())} className="restartButton">
             RESTART
           </button>
         </div>

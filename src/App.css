@@ -2,24 +2,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.container,
+h1 {
   font-family: "Bungee";
   font-size: 5rem;
   font-weight: 500;
 }
 
-.Title {
-  font-size: 5rem;
-  font-weight: 500;
+.title {
   margin: 1rem;
+  user-select: none;
 }
 
-.Title_1half {
+.title1 {
   color: rgb(255, 187, 0);
-  animation: 1s flicker infinite;
-  text-shadow: 0 0 42px rgb(255, 187, 0), 0 0 82px rgb(255, 187, 0),
-    0 0 92px rgb(255, 187, 0);
+  text-shadow: 0 0 2.5rem rgb(255, 187, 0), 0 0 5rem rgb(255, 187, 0),
+    0 0 5.75rem rgb(255, 187, 0);
 }
 
-.Title_2half {
+.title2 {
   color: rgb(80, 80, 80);
 }

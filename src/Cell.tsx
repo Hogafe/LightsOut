@@ -1,5 +1,3 @@
-import React from "react";
-import internal from "stream";
 import "./Cell.css";
 
 function Cell({
@@ -11,7 +9,7 @@ function Cell({
 }) {
   return (
     <button
-      className={"cell " + (cellOn ? "cellLightOn" : "cellLightOff")}
+      className={"cell " + (cellOn ? "cellOn" : "cellOff")}
       onClick={toggleLight}
     ></button>
   );
