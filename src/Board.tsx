@@ -1,8 +1,7 @@
 import "./Board.css";
-import Cell from "./Cell";
 import { useEffect, useState } from "react";
 
-export function Board({ size, chance }: { size: number; chance: number }) {
+export const Board = ({ size, chance }: { size: number; chance: number }) => {
   const [hasWon, setHasWon] = useState(false);
 
   // helper to generate a randomly populated grid
@@ -10,6 +9,7 @@ export function Board({ size, chance }: { size: number; chance: number }) {
     return Array.from({ length: size }, () =>
       Array.from({ length: size }, () => {
         // generate a randomly enabled/disabled cell
+
         return Math.random() < chance;
       })
     );
@@ -18,7 +18,7 @@ export function Board({ size, chance }: { size: number; chance: number }) {
   const [grid, setGrid] = useState(makeGrid());
 
   useEffect(() => {
-    // check if every cell in every row is disabled
+    // check if every cell in every row is disabled (it is equal to false)
     setHasWon(grid.every((row) => row.every((cell) => !cell)));
   }, [grid]);
 
@@ -56,11 +56,11 @@ export function Board({ size, chance }: { size: number; chance: number }) {
         {grid.map((row, rowIndex) => (
           <div className="row" key={rowIndex}>
             {row.map((cell, columnIndex) => (
-              <Cell
-                cellOn={cell}
-                toggleLight={() => toggleLights(rowIndex, columnIndex)}
+              <button
+                className={"cell " + (cell ? "cellOn" : "cellOff")}
+                onClick={() => toggleLights(rowIndex, columnIndex)}
                 key={columnIndex}
-              ></Cell>
+              ></button>
             ))}
           </div>
         ))}
@@ -77,4 +77,4 @@ export function Board({ size, chance }: { size: number; chance: number }) {
       ) : undefined}
     </div>
   );
-}
+};

@@ -8,7 +8,6 @@
 h1 {
   font-family: "Bungee";
   font-size: 5rem;
-  font-weight: 500;
 }
 
 .title {
@@ -19,7 +18,7 @@ h1 {
 .title1 {
   color: rgb(255, 187, 0);
   text-shadow: 0 0 2.5rem rgb(255, 187, 0), 0 0 5rem rgb(255, 187, 0),
-    0 0 5.75rem rgb(255, 187, 0);
+    0 0 6rem rgb(255, 187, 0);
 }
 
 .title2 {
