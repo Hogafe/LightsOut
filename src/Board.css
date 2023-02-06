@@ -7,16 +7,10 @@
   padding: 2rem;
   overflow: hidden;
 }
+
 .row {
   display: flex;
   gap: 2rem;
-}
-
-.board {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 
 .winContainer {

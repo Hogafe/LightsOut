@@ -56,6 +56,7 @@ export const Board = ({ size, chance }: { size: number; chance: number }) => {
         {grid.map((row, rowIndex) => (
           <div className="row" key={rowIndex}>
             {row.map((cell, columnIndex) => (
+              /*cell*/
               <button
                 className={"cell " + (cell ? "cellOn" : "cellOff")}
                 onClick={() => toggleLights(rowIndex, columnIndex)}
@@ -69,7 +70,7 @@ export const Board = ({ size, chance }: { size: number; chance: number }) => {
       {/* if the player has won, show the reset button and congratulations text*/}
       {hasWon ? (
         <div className="winContainer">
-          <p className="winText"> CONGARTULATIONS!!!</p>
+          <p className="winText"> CONGRATULATIONS!!!</p>
           <button onClick={() => setGrid(makeGrid())} className="restartButton">
             RESTART
           </button>
