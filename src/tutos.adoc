@@ -1,0 +1,109 @@
+ //1.jak hra funguje
+//2.herní pole
+//3.tlačítka, měnění stavu světel,
+//4.kontrola váhry
+
+== Lights Out
+
+
+Ready to make your first react game? Alright let's get started. First of all we're gonna learn the fundementals of this game.
+
+* We play on a grid
+* The goal is to turn of all the lights
+* We start with random number of lights on
+* When we click on a light it and surrounding light changes state
+
+== Creating project
+
+Nothing special needed for this, so we are going to run this npx command.
+----
+npx create-react-app lightsOut --template typescript
+----
+
+
+== Making the board
+
+First of all, we want to create new file. Since we are creating board let's call it `Board.tsx`.
+
+Since we want to have a board, we will have to make two dimensional array. The size of the board can vary, so we want to make a variable. Also we need to controll how many lights are on, so let's make a variable for that too.
+
+We will pass the two variables as props. Since we want to use this component in a different file, we need to expot it.
+[source, jsx]
+----
+export const Board = ({ size, chance }: { size: number; chance: number }) => {
+
+};
+----
+
+Now let's make a function for the gird itself.
+[source, jsx]
+----
+const makeGrid = () => {
+  return Array.from({ length: size }, () =>
+     Array.from({ length: size }, () => {
+       // generate a randomly enabled/disabled cell
+
+      return Math.random() < chance;
+    })
+  );
+};
+----
+
+This may seem confusing at first but it's simple. As the name suggests, the function `Array.from()` makes an array for a given length. The first argument is the size of the board and the second one is an arrow function that has another `Array.from()` inside of it. And lastly, to set the `cell` on or off, we generate a random nuber and then compare it with the prop `chance` Let's look at an example. Say that `Math.random()` has given us a value of 0.4 and `chance` is 0.2. As we can see 0.4 is greater than 0.2 and the cell isn't turned on.
+
+Nice work, we have the working board. Now let's add html and css to is it in action.
+
+First of all, another file. This time `Board.css` and let's add some css straight away.
+[source, css]
+----
+.board {
+  background-color: rgb(59, 59, 59);
+  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.row {
+  display: flex;
+  gap: 2rem;
+}
+----
+These are styles for the board, now we need to add the cells.
+[source, css]
+----
+.cell {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: none;
+  transition: background-color 0.1s ease-out;
+}
+---- 
+
+Now we need to separate when the cell is on and off.
+
+[source, css]
+----
+.cellOn {
+  background-color: rgb(255, 187, 0);
+  box-shadow: 0 0 2.5rem rgb(255, 187, 0), 0 0 5rem rgb(255, 187, 0),
+    0 0 6rem rgb(255, 187, 0);
+}
+.cellOff {
+  background-color: rgb(80, 80, 80);
+}
+----
+
+And lastly some nice looking hover styles.
+
+[source, css]
+----
+.cellOn:hover {
+  background-color: rgba(255, 187, 0, 0.8);
+}
+.cellOff:hover {
+  background-color: rgba(255, 187, 0, 0.1);
+}
+----
