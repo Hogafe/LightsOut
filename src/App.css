@@ -17,8 +17,7 @@ h1 {
 
 .title1 {
   color: rgb(255, 187, 0);
-  text-shadow: 0 0 2.5rem rgb(255, 187, 0), 0 0 5rem rgb(255, 187, 0),
-    0 0 6rem rgb(255, 187, 0);
+  text-shadow: 0 0 2.5rem rgb(255, 187, 0), 0 0 5rem rgb(255, 187, 0);
 }
 
 .title2 {
