@@ -1,10 +1,4 @@
- //1.jak hra funguje
-//2.herní pole
-//3.tlačítka, měnění stavu světel,
-//4.kontrola váhry
-
-== Lights Out
-
+= Lights Out
 
 Ready to make your first react game? Alright let's get started. First of all we're gonna learn the fundementals of this game.
 
@@ -17,7 +11,7 @@ Ready to make your first react game? Alright let's get started. First of all we'
 
 Nothing special needed for this, so we are going to run this npx command.
 ----
-npx create-react-app lightsOut --template typescript
+npx create-react-app lights-out --template typescript
 ----
 
 
@@ -47,9 +41,10 @@ const makeGrid = () => {
     })
   );
 };
+const [grid, setGrid] = useState(makeGrid());
 ----
 
-This may seem confusing at first but it's simple. As the name suggests, the function `Array.from()` makes an array for a given length. The first argument is the size of the board and the second one is an arrow function that has another `Array.from()` inside of it. And lastly, to set the `cell` on or off, we generate a random nuber and then compare it with the prop `chance` Let's look at an example. Say that `Math.random()` has given us a value of 0.4 and `chance` is 0.2. As we can see 0.4 is greater than 0.2 and the cell isn't turned on.
+This may seem confusing at first but it's simple. As the name suggests, the function `Array.from()` makes an array for a given length. The first argument is the size of the board and the second one is an arrow function that has another `Array.from()` inside of it. And lastly, to set the `cell` on or off, we generate a random nuber and then compare it with the prop `chance` Let's look at an example. Say that `Math.random()` has given us a value of 0.4 and `chance` is 0.2. As we can see 0.4 is greater than 0.2 and the cell isn't turned on. Then we save the value to `useState()`.
 
 Nice work, we have the working board. Now let's add html and css to is it in action.
 
@@ -96,6 +91,37 @@ Now we need to separate when the cell is on and off.
 }
 ----
 
+It wouldn't be complete without a title. And especially this great looking one. We want to have the title and the board in one container, so let's do it.
+[source, css]
+----
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container,
+h1 {
+  font-family: "Bungee";
+  font-size: 5rem;
+}
+
+.title {
+  margin: 1rem;
+  user-select: none;
+}
+
+.title1 {
+  color: rgb(255, 187, 0);
+  text-shadow: 0 0 2.5rem rgb(255, 187, 0), 0 0 5rem rgb(255, 187, 0);
+}
+
+.title2 {
+  color: rgb(80, 80, 80);
+}
+
+----
+
 And lastly some nice looking hover styles.
 
 [source, css]
@@ -105,5 +131,512 @@ And lastly some nice looking hover styles.
 }
 .cellOff:hover {
   background-color: rgba(255, 187, 0, 0.1);
+}
+----
+Now let's import the css file.
+----
+import "./Board.css"
+----
+File `Board.tsx` looks like this now. 
+[source, jsx]
+----
+import "./Board.css"
+
+export const Board = ({ size, chance }: { size: number; chance: number }) => {
+  
+  const makeGrid = () => {
+    return Array.from({ length: size }, () =>
+      Array.from({ length: size }, () => {
+        // generate a randomly enabled/disabled cell
+
+        return Math.random() < chance;
+      })
+    );
+  };
+
+  const [grid, setGrid] = useState(makeGrid());
+  
+  return (
+    
+  );
+};
+----
+
+We are gonna add html to the `return()`.
+[source, jsx]
+----
+<div className="container">
+      <h1 className="title">
+        <span className="title1">LIGHTS</span>
+        &nbsp;
+        <span className="title2">OUT</span>
+      </h1>
+
+      <div className="board">
+        {grid.map((row, rowIndex) => (
+          <div className="row" key={rowIndex}>
+            {row.map((cell, columnIndex) => (
+              /*cell*/
+              <button
+                className={"cell " + (cell ? "cellOn" : "cellOff")}
+                key={columnIndex}
+              ></button>
+            ))}
+          </div>
+        ))}
+      </div>
+  </div>
+  
+----
+
+Wow! That's a lot of code, but again it's not that complicated. We can see that there are two `maps()`, they are used to get inside of the two dimensional array. The inside map returns `button`, which is our cell or light, whether how you want to call it. Now even the `cellOn` and `cellOff` styles come handy as we apply them based on the cell's state.
+
+This all looks great, so try and run this. Oh no! Why isn't it working? That's because we forgot to use `Board`, we are only creating it. Now how to fix it. 
+
+In file `App.tsx` delete everything from `return()` and add our component `Board`.Don't forget to import it.
+
+[source, jsx]
+----
+import { Board } from "./Board";
+----
+
+Also don't forget to pass the `props`. Prop `size` is whatever number you like but usually this game is played on 5 by 5 grid. And prop `change` is number from 0 to 1. When set to 0 no lights will turn on and 1 means all lights turn on. Do as you wish! 
+
+Here's what I've chosen.
+[source, jsx]
+----
+import { Board } from "./Board";
+
+function App() {
+  return <Board size={5} chance={0.25} />;
+}
+
+export default App;
+
+----
+
+== Turning lights on and off
+
+This where things get little bit more difficult but don't worry, you can do it. And I'm here to help you with everything.
+
+First of all let's make a function that checks what button we've clicked and changes the state.
+
+[source, jsx]
+----
+ const toggleOne = (currentRow: number, currentColumn: number) => {
+    
+  };
+----
+
+This looks good. It takes index of the row and column that we've clicked. Now to do something with it.
+
+[source, jsx]
+----
+ const toggleOne = (currentRow: number, currentColumn: number) => {
+    setGrid((latestGrid) =>
+      latestGrid.map((row, rowIndex) =>
+        currentRow === rowIndex
+          ? row.map((cell, columnIndex) =>
+              currentColumn === columnIndex ? !cell : cell
+            )
+          : row
+      )
+    );
+  };
+----
+Can you belive it? This is all we need to change state of one light.
+
+Now to tell you what it does. First thing we see is that we're change the value of useState() `grid`. Next the already familiar two `maps()`. And what they do? Yes they acces the two dimensional array. This time the first one checks if `currentRow` which is index of the button we've clicked is the same as `rowIndex`. If it is the same, the second `map()` is executed. And this one checks if the `currentColumn` is the same as `columnIndex`. Again if the condition is true, the light changes state, if not it stays the same.
+
+As this changes the state of only one light, we need to call it five time with different values to toggle all of the lights.
+
+[source, jsx]
+----
+const toggleLights = (currentRow: number, currentColumn: number) => {
+    toggleOne(currentRow, currentColumn); // self
+    toggleOne(currentRow - 1, currentColumn); // up
+    toggleOne(currentRow + 1, currentColumn); // down
+    toggleOne(currentRow, currentColumn + 1); // right
+    toggleOne(currentRow, currentColumn - 1); // left
+  };
+----
+Same props as before. As you can see we are calling function `toggleOne()` five times. First time we pass the indexes of the clicked button and then we add or subtract 1.
+
+Now let's call this funcion when we click the button.
+[source, jsx]
+----
+ <button
+   className={"cell " + (cell ? "cellOn" : "cellOff")}
+   onClick={() => toggleLights(rowIndex, columnIndex)}
+   key={columnIndex}
+  ></button>
+----
+We have just added `onclick()` to the existing button and passed indexes from our `maps()`
+
+== Checking win
+
+There just one more very important thing to do. That is acutally being able to win this game. We have to make function that checks if all the lights are off. We want to do that every time the array `grid` has changed. That means there is one hooks that is great for this.
+
+But first of all we need to make a variable that we can change if all the lights are out.
+[source, jsx]
+----
+const [hasWon, setHasWon] = useState(false);
+----
+
+I hope you were thinking about `useState()` too.
+
+Now actually checking if we have won or not.
+[source, jsx]
+----
+useEffect(() => {
+    // check if every cell in every row is disabled (it is equal to false)
+    setHasWon(grid.every((row) => row.every((cell) => !cell)));
+  }, [grid]);
+----
+
+The hook `useEffect()` was an obvious choice here as we need to check every time `grid` changes. `grid.every()` checks if every cell in row is disabled. Then `row.every()` does the same but inside `row`. And then returns `!cell`. So if `cell` is turned of it is equal to `false`. That means `!cell` is true and `setHasWon()` gets set to true.
+
+Great we have a variable that has the necessary information if we won. So now we can display congratulations text and restart button based on this variable.
+
+We will add this to the `return()` of `Board`. This is how the `return()` looks now.
+[source, jsx]
+----
+return (
+    <div className="container">
+      <h1 className="title">
+        <span className="title1">LIGHTS</span>
+        &nbsp;
+        <span className="title2">OUT</span>
+      </h1>
+
+      <div className="board">
+        {grid.map((row, rowIndex) => (
+          <div className="row" key={rowIndex}>
+            {row.map((cell, columnIndex) => (
+              /*cell*/
+              <button
+                className={"cell " + (cell ? "cellOn" : "cellOff")}
+                onClick={() => toggleLights(rowIndex, columnIndex)}
+                key={columnIndex}
+              ></button>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+----
+
+And now the part that happens when we win.
+
+[source, jsx]
+----
+return (
+    <div className="container">
+      <h1 className="title">
+        <span className="title1">LIGHTS</span>
+        &nbsp;
+        <span className="title2">OUT</span>
+      </h1>
+
+      <div className="board">
+        {grid.map((row, rowIndex) => (
+          <div className="row" key={rowIndex}>
+            {row.map((cell, columnIndex) => (
+              /*cell*/
+              <button
+                className={"cell " + (cell ? "cellOn" : "cellOff")}
+                onClick={() => toggleLights(rowIndex, columnIndex)}
+                key={columnIndex}
+              ></button>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      {/* if the player has won, show the reset button and congratulations text*/}
+      {hasWon ? (
+        <div className="winContainer">
+          <p className="winText"> CONGRATULATIONS!!!</p>
+          <button onClick={() => setGrid(makeGrid())} className="restartButton">
+            RESTART
+          </button>
+        </div>
+      ) : undefined}
+    </div>
+  );
+----
+
+We just check if `hasWon` is true and then show the text and restart button. And the button has `onClick()` on it that calls `setGrid(makeGrid())` this creates new ranodom variation of lights and we can play again. As you can see there are some new css classes so let's make them in `Board.css`.
+
+[source, css]
+----
+.winContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.winText {
+  margin: 1rem;
+  color: rgb(255, 187, 0);
+}
+
+.restartButton {
+  border-radius: 0.5rem;
+  font-size: 3rem;
+  border: none;
+  background-color: rgb(50, 50, 50);
+  color: rgb(255, 187, 0);
+}
+
+.restartButton:hover {
+  background-color: rgb(40, 40, 40);
+}
+----
+
+There you have it we are almost done, but we can do one last thing and that is to make the font of the title look nicer and make the background gray. 
+
+You should have file called `index.css` it folder `src`. If you have found it, replace the code inside with this.
+
+[source, css]
+----
+@import url("https://fonts.googleapis.com/css2?family=Bungee&display=swap");
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(40, 40, 40);
+  font-family: "Bungee";
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+----
+
+And with this there is only one thing I can say. 
+
+Congratulations! You've just made your first game in react.
+
+== The completed game
+
+The code you have should look something like this.
+
+File `App.tsx`.
+[source, jsx]
+----
+import { Board } from "./Board";
+
+function App() {
+  return <Board size={5} chance={0.25} />;
+}
+
+export default App;
+
+----
+
+File `Board.tsx`.
+[source, jsx]
+----
+import "./Board.css";
+import { useEffect, useState } from "react";
+
+export const Board = ({ size, chance }: { size: number; chance: number }) => {
+  const [hasWon, setHasWon] = useState(false);
+
+  // helper to generate a randomly populated grid
+  const makeGrid = () => {
+    return Array.from({ length: size }, () =>
+      Array.from({ length: size }, () => {
+        // generate a randomly enabled/disabled cell
+
+        return Math.random() < chance;
+      })
+    );
+  };
+
+  const [grid, setGrid] = useState(makeGrid());
+
+  useEffect(() => {
+    // check if every cell in every row is disabled (it is equal to false)
+    setHasWon(grid.every((row) => row.every((cell) => !cell)));
+  }, [grid]);
+
+  // toggle a single specified cell
+  const toggleOne = (currentRow: number, currentColumn: number) => {
+    setGrid((latestGrid) =>
+      latestGrid.map((row, rowIndex) =>
+        currentRow === rowIndex
+          ? row.map((cell, columnIndex) =>
+              currentColumn === columnIndex ? !cell : cell
+            )
+          : row
+      )
+    );
+  };
+
+  // toggle a specified cell along with its neighbors
+  const toggleLights = (currentRow: number, currentColumn: number) => {
+    toggleOne(currentRow, currentColumn); // self
+    toggleOne(currentRow - 1, currentColumn); // up
+    toggleOne(currentRow + 1, currentColumn); // down
+    toggleOne(currentRow, currentColumn + 1); // right
+    toggleOne(currentRow, currentColumn - 1); // left
+  };
+
+  return (
+    <div className="container">
+      <h1 className="title">
+        <span className="title1">LIGHTS</span>
+        &nbsp;
+        <span className="title2">OUT</span>
+      </h1>
+
+      <div className="board">
+        {grid.map((row, rowIndex) => (
+          <div className="row" key={rowIndex}>
+            {row.map((cell, columnIndex) => (
+              /*cell*/
+              <button
+                className={"cell " + (cell ? "cellOn" : "cellOff")}
+                onClick={() => toggleLights(rowIndex, columnIndex)}
+                key={columnIndex}
+              ></button>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      {/* if the player has won, show the reset button and congratulations text*/}
+      {hasWon ? (
+        <div className="winContainer">
+          <p className="winText"> CONGRATULATIONS!!!</p>
+          <button onClick={() => setGrid(makeGrid())} className="restartButton">
+            RESTART
+          </button>
+        </div>
+      ) : undefined}
+    </div>
+  );
+};
+----
+
+File `Board.css`
+[source, css]
+----
+.board {
+  background-color: rgb(59, 59, 59);
+  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.row {
+  display: flex;
+  gap: 2rem;
+}
+
+.winContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.winText {
+  margin: 1rem;
+  color: rgb(255, 187, 0);
+}
+
+.restartButton {
+  border-radius: 0.5rem;
+  font-size: 3rem;
+  border: none;
+  background-color: rgb(50, 50, 50);
+  color: rgb(255, 187, 0);
+}
+
+.restartButton:hover {
+  background-color: rgb(40, 40, 40);
+}
+/*cell*/
+.cell {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: none;
+  transition: background-color 0.1s ease-out;
+}
+.cellOn:hover {
+  background-color: rgba(255, 187, 0, 0.8);
+}
+.cellOff:hover {
+  background-color: rgba(255, 187, 0, 0.1);
+}
+.cellOn {
+  background-color: rgb(255, 187, 0);
+  box-shadow: 0 0 2.5rem rgb(255, 187, 0), 0 0 5rem rgb(255, 187, 0),
+    0 0 6rem rgb(255, 187, 0);
+}
+.cellOff {
+  background-color: rgb(80, 80, 80);
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container,
+h1 {
+  font-family: "Bungee";
+  font-size: 5rem;
+}
+
+.title {
+  margin: 1rem;
+  user-select: none;
+}
+
+.title1 {
+  color: rgb(255, 187, 0);
+  text-shadow: 0 0 2.5rem rgb(255, 187, 0), 0 0 5rem rgb(255, 187, 0);
+}
+
+.title2 {
+  color: rgb(80, 80, 80);
+}
+----
+
+And finally file `index.css`
+[source, css]
+----
+@import url("https://fonts.googleapis.com/css2?family=Bungee&display=swap");
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(40, 40, 40);
+  font-family: "Bungee";
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }
 ----

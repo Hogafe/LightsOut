@@ -23,12 +23,12 @@ export const Board = ({ size, chance }: { size: number; chance: number }) => {
   }, [grid]);
 
   // toggle a single specified cell
-  const toggleOne = (updatedRow: number, updatedColumn: number) => {
+  const toggleOne = (currentRow: number, currentColumn: number) => {
     setGrid((latestGrid) =>
       latestGrid.map((row, rowIndex) =>
-        updatedRow === rowIndex
+        currentRow === rowIndex
           ? row.map((cell, columnIndex) =>
-              updatedColumn === columnIndex ? !cell : cell
+              currentColumn === columnIndex ? !cell : cell
             )
           : row
       )
@@ -36,12 +36,12 @@ export const Board = ({ size, chance }: { size: number; chance: number }) => {
   };
 
   // toggle a specified cell along with its neighbors
-  const toggleLights = (updatedRow: number, updatedColumn: number) => {
-    toggleOne(updatedRow, updatedColumn); // self
-    toggleOne(updatedRow - 1, updatedColumn); // up
-    toggleOne(updatedRow + 1, updatedColumn); // down
-    toggleOne(updatedRow, updatedColumn + 1); // right
-    toggleOne(updatedRow, updatedColumn - 1); // left
+  const toggleLights = (currentRow: number, currentColumn: number) => {
+    toggleOne(currentRow, currentColumn); // self
+    toggleOne(currentRow - 1, currentColumn); // up
+    toggleOne(currentRow + 1, currentColumn); // down
+    toggleOne(currentRow, currentColumn + 1); // right
+    toggleOne(currentRow, currentColumn - 1); // left
   };
 
   return (
